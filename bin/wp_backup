@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require 'wp_backup'
+
+begin
+  require 'wp_backup/cli'
+  WpBackup::CLI.start
+rescue WpBackup::BackupError => e
+  puts e.message
+  puts e.backtrace.join("\n")
+  exit e.status_code
+rescue Interrupt => e
+  puts "\nQuitting..."
+  puts e.backtrace.join("\n")
+  exit 1
+rescue SystemExit => e
+  exit e.status
+rescue Exception => e
+  puts 'Fatal Error!'
+  puts e.message
+  puts e.backtrace.join("\n")
+  raise e
+end
