@@ -7,11 +7,11 @@ is entirely configurable by a simple file.
 
 ## <a name="installation"></a>Installation
 
-  gem install wp_backup
+    gem install wp_backup
 
 ## <a name="usage"></a>Usage
 
-You'll now have acceess to the wp_backup command. Try wp_backup help to get a list of available tasks.
+You'll now have acceess to the wp_backup command. Try "wp_backup help" to get a list of available tasks.
 
 ## <a name="copyright"></a>Copyright
 Copyright (c) 2012 Aubrey Holland
