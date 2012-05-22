@@ -8,7 +8,7 @@ is entirely configurable by a simple file.
 ### Installation and usage
 
 
-#me="copyright"></a>Copyright
+## <a name="copyright"></a>Copyright
 Copyright (c) 2012 Aubrey Holland
 See [LICENSE][] for details.
 
