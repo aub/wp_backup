@@ -1,3 +1,5 @@
+require 'yaml'
+
 module WpBackup
   class Config
 
@@ -7,7 +9,7 @@ module WpBackup
     end
     
     def s3
-      S3.new(aws_config, root_bucket)
+      S3.new(aws_config, @bucket_name)
     end
 
     def database
@@ -19,7 +21,7 @@ module WpBackup
     end
 
     def site
-      Site.new(wordpress_config['home'])
+      Site.new(wordpress_config['home'], wordpress_config['backup_paths'])
     end
 
     def self.write_sample(file)
@@ -31,6 +33,10 @@ database:
   password:
 wordpress:
   home:
+  # this allows you to specify which directories to backup. if it's not
+  # included or the list is empty the entire directory is backed up.
+  backup_paths:
+    -
 aws:
   access_key_id:
   secret_access_key:

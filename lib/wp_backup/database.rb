@@ -9,10 +9,19 @@ module WpBackup
 
     def dump_to(file)
       cmd = "mysqldump --opt --skip-add-locks -u#{@login} "
-      cmd += "-p'#{@password}' " unless @password.empty?
+      cmd += "-p'#{@password}' " unless @password.nil? || @password.length == 0
       cmd += " #{@db_name} > #{file}"
       result = system(cmd)
       raise("ERROR: mysqldump failed (#{$?})") unless result
+    end
+
+    def restore_from(file)
+      if File.exists?(file)
+        cmd = "mysql -u#{@login} "
+        cmd += "-p'#{@password}' " unless @password.nil? || @password.length == 0
+        cmd += " #{@db_name} < #{file}"
+        system(cmd)
+      end
     end
   end
 end

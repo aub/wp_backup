@@ -1,3 +1,5 @@
+require 'aws-sdk'
+
 module WpBackup
   class S3
     def initialize(aws_config, root_bucket)
@@ -14,25 +16,27 @@ module WpBackup
       object.write(:file => file_name)
     end
 
-    # # Print all backups in a particular bucket
-    # def print_bucket(name)
-    #   msg "Showing contents of #{bucket_name(name)}"
-    #   bucket = AWS::S3::Bucket.find(bucket_name(name))
-    #   bucket.objects.each do |object|
-    #     size = format("%.2f", object.size.to_f/1048576)
-    #     puts "Name: #{object.key} (#{size}MB)"
-    #   end
-    # end
+    def read(key)
+      use_key = "wp-backup-#{key}.tar.gz"
+      @bucket.objects[use_key].read
+    end
 
-    # # Remove all but KEEP_NUM objects from a particular bucket
-    # def cleanup_bucket(name, keep_num)
-    #   msg "Cleaning up #{bucket_name(name)} (keeping last #{keep_num})"
-    #   bucket = AWS::S3::Bucket.find(bucket_name(name))
-    #   objects = bucket.objects
-    #   remove = objects.size-keep_num-1
-    #   objects[0..remove].each do |object|
-    #     response = object.delete
-    #   end unless remove < 0
-    # end
+    def keys
+      [].tap do |keys|
+        @bucket.objects.each do |obj|
+          if obj.key =~ /wp-backup-(\d+).tar.gz/
+            keys <<  $1
+          end
+        end
+      end
+    end
+
+    def delete_keys(keys)
+      keys.each do |key|
+        puts "Deleting #{key}"
+        use_key = "wp-backup-#{key}.tar.gz"
+        @bucket.objects[use_key].delete
+      end
+    end
   end
 end
