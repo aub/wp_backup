@@ -18,6 +18,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project         = 'wp_backup'
 
+  s.add_dependency 'aws-sdk', '1.5.2'
+  s.add_dependency 'thor', '0.15.2'
   s.add_development_dependency 'ronn'
   s.add_development_dependency 'rspec', '~> 2.0'
 
