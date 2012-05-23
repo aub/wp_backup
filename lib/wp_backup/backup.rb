@@ -10,20 +10,25 @@ module WpBackup
       root_dir = "/tmp/wp-backup-#{timestamp}"
 
       begin
+        dirs = []
+
         if backup_site
           site_dir = File.join(root_dir, 'site')
           FileUtils.mkdir_p(site_dir)
           site_file = @config.site.dump_to(File.join(root_dir, 'site', 'site.tar'))
+          dirs << 'site'
         end
 
         if backup_db
           db_dir = File.join(root_dir, 'db')
           FileUtils.mkdir_p(db_dir)
           db_file = @config.database.dump_to(File.join(db_dir, 'db.sql'))
+          dirs << 'db'
         end
 
         package_file = "/tmp/wp-backup-#{timestamp}.tar.gz"
-        `cd #{root_dir} && tar -czf #{package_file} db site`
+
+        `cd #{root_dir} && tar -czf #{package_file} #{dirs.join(' ')}`
 
         @config.s3.store(package_file)
       ensure
