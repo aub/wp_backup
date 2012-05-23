@@ -45,10 +45,10 @@ module WpBackup
 
       begin
         File.open(File.join(root_dir, 'restore.tar.gz'), 'wb') do |file|
-          file.puts(@config.s3.read(key))
+          file.write(@config.s3.read(key))
         end
 
-        `cd #{root_dir} && tar -xzvf restore.tar.gz`
+        `cd #{root_dir} && tar -xzf restore.tar.gz`
 
         db_file = File.join(root_dir, 'db', 'db.sql')
         if File.exists?(db_file)
