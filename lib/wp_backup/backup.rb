@@ -8,6 +8,7 @@ module WpBackup
     def create(backup_db=true, backup_site=true)
       timestamp = Time.now.utc.strftime("%Y%m%d%H%M%S")
       root_dir = "/tmp/wp-backup-#{timestamp}"
+      package_file = "/tmp/wp-backup-#{timestamp}.tar.gz"
 
       begin
         dirs = []
@@ -26,13 +27,11 @@ module WpBackup
           dirs << 'db'
         end
 
-        package_file = "/tmp/wp-backup-#{timestamp}.tar.gz"
-
         `cd #{root_dir} && tar -czf #{package_file} #{dirs.join(' ')}`
 
         @config.s3.store(package_file)
       ensure
-        `rm -rf #{root_dir}`
+        `rm -rf #{root_dir} #{package_file}`
       end
 
       timestamp
@@ -45,7 +44,7 @@ module WpBackup
       FileUtils.mkdir_p(root_dir)
 
       begin
-        File.open(File.join(root_dir, 'restore.tar.gz'), 'w') do |file|
+        File.open(File.join(root_dir, 'restore.tar.gz'), 'wb') do |file|
           file.puts(@config.s3.read(key))
         end
 
