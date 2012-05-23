@@ -51,8 +51,15 @@ module WpBackup
 
         `cd #{root_dir} && tar -xzvf restore.tar.gz`
 
-        @config.database.restore_from(File.join(root_dir, 'db', 'db.sql'))
-        @config.site.restore_from(File.join(root_dir, 'site', 'site.tar'))
+        db_file = File.join(root_dir, 'db', 'db.sql')
+        if File.exists?(db_file)
+          @config.database.restore_from(db_file)
+        end
+
+        site_file = File.join(root_dir, 'site', 'site.tar')
+        if File.exists?(site_file)
+          @config.site.restore_from(site_file)
+        end
       ensure
         `rm -rf #{root_dir}`
       end
